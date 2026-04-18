@@ -80,3 +80,14 @@
         const FORMSPREE_URL = "https://formspree.io/f/xqewqrgv"; 
 
         document.getElementById('startBtn').addEventListener('click', async () => {
+            const name = document.getElementById('userName').value.trim();
+            if (!name) return Swal.fire('Oops!', 'I need a name!', 'error');
+
+            let accepted = false;
+
+            // Step 1: Main Question (Mochi Cat Throwing Flowers)
+            while (!accepted) {
+                const { value: response } = await Swal.fire({
+                    title: `FOR ${name.toUpperCase()} ❤️`,
+                    text: "Would you like to be my date?",
+                    imageUrl: '
