@@ -18,7 +18,7 @@
             position: relative;
         }
 
-        /* Falling Hearts Animation */
+        /* Heart Rain */
         .heart {
             position: absolute;
             color: #ff4d6d;
@@ -34,19 +34,19 @@
         }
 
         .container { 
-            background: rgba(255, 255, 255, 0.9); 
+            background: rgba(255, 255, 255, 0.95); 
             padding: 2.5rem; 
-            border-radius: 20px; 
+            border-radius: 25px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
             text-align: center; 
             width: 320px; 
             z-index: 10;
         }
 
-        h1 { color: #d63384; margin-bottom: 1.5rem; }
-        input { width: 90%; padding: 12px; margin-bottom: 20px; border: 2px solid #ffccd5; border-radius: 10px; outline: none; }
-        button { background-color: #ff4d6d; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
-        button:hover { background-color: #ef233c; transform: scale(1.02); }
+        h1 { color: #d63384; margin-bottom: 1.5rem; font-size: 2rem; }
+        input { width: 90%; padding: 12px; margin-bottom: 20px; border: 2px solid #ffccd5; border-radius: 12px; outline: none; text-align: center; }
+        button { background-color: #ff4d6d; color: white; border: none; padding: 14px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; font-size: 1rem; }
+        button:hover { background-color: #ef233c; transform: translateY(-2px); }
         .swal2-image { border-radius: 15px; }
     </style>
 </head>
@@ -63,7 +63,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // 1. Heart Rain Effect
+        // 1. Falling Hearts Logic
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -76,18 +76,90 @@
         }
         setInterval(createHeart, 300);
 
-        // 2. The Interaction Logic
+        // 2. The Main Interaction
         const FORMSPREE_URL = "https://formspree.io/f/xqewqrgv"; 
 
         document.getElementById('startBtn').addEventListener('click', async () => {
             const name = document.getElementById('userName').value.trim();
-            if (!name) return Swal.fire('Oops!', 'I need a name!', 'error');
+            if (!name) return Swal.fire('Oops!', 'Please enter a name first!', 'error');
 
             let accepted = false;
 
-            // Step 1: Main Question (Mochi Cat Throwing Flowers)
+            // Loop until they say YES
             while (!accepted) {
                 const { value: response } = await Swal.fire({
                     title: `FOR ${name.toUpperCase()} ❤️`,
                     text: "Would you like to be my date?",
-                    imageUrl: '
+                    imageUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG56Z3R3bmZidm9yeHByZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/v7O96tT4XUiz5T906s/giphy.gif', 
+                    imageWidth: 250,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes! 😍',
+                    cancelButtonText: 'No ☹️',
+                    confirmButtonColor: '#ff4d6d',
+                    cancelButtonColor: '#ffccd5',
+                    allowOutsideClick: false
+                });
+
+                if (response) {
+                    accepted = true;
+                } else {
+                    // Crying cat GIF for the "No" guilt-trip
+                    await Swal.fire({
+                        title: "Are you sure?",
+                        text: "Look at this face... think about it again? 🥺",
+                        imageUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnB2Nmt3cW14dzZ4ZzB4Z3B4Z3B4Z3B4Z3B4Z3B4Z3B4Z3B4Z3B4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/OPU6wUKARA8AU/giphy.gif',
+                        imageWidth: 250,
+                        confirmButtonText: "Okay, I'll reconsider",
+                        confirmButtonColor: '#ff4d6d'
+                    });
+                }
+            }
+
+            // Walking Preference
+            const { value: likesWalking } = await Swal.fire({
+                title: 'Quick question...',
+                text: 'Do you like long walks?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, I love them!',
+                cancelButtonText: 'Not really',
+                confirmButtonColor: '#ff4d6d'
+            });
+
+            // Date options (Dinner removed as requested)
+            let dateOptions = {
+                'Outdoor Adventure': 'Adventure 🌲',
+                'Chill Hangout': 'Chill Hangout 🍿',
+                'Surprise Me': 'Surprise Me! 🎁'
+            };
+
+            if (likesWalking) {
+                dateOptions['Cafe Date'] = 'Cute Cafe Date ☕';
+            }
+
+            const { value: dateType } = await Swal.fire({
+                title: 'Pick a vibe',
+                input: 'select',
+                inputOptions: dateOptions,
+                confirmButtonColor: '#ff4d6d'
+            });
+
+            if (dateType) {
+                // Send to Formspree
+                fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ name, likesWalking: likesWalking ? "Yes" : "No", chosenDate: dateType }),
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'It\'s a Date! ✅',
+                    text: `Perfect! I'll see you for our ${dateType}!`,
+                    confirmButtonColor: '#ff4d6d'
+                });
+            }
+        });
+    </script>
+</body>
+</html>
