@@ -46,7 +46,7 @@
         input { width: 90%; padding: 12px; margin-bottom: 20px; border: 2px solid #ffccd5; border-radius: 12px; outline: none; text-align: center; }
         button { background-color: #ff4d6d; color: white; border: none; padding: 14px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
         button:hover { background-color: #ef233c; }
-        .swal2-image { border-radius: 15px; object-fit: cover; }
+        .swal2-image { border-radius: 15px; }
     </style>
 </head>
 <body>
@@ -62,7 +62,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Heart Rain
+        // Heart Animation
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -78,11 +78,11 @@
 
         document.getElementById('startBtn').addEventListener('click', async () => {
             const name = document.getElementById('userName').value.trim();
-            if (!name) return Swal.fire('Oops!', 'Please enter a name!', 'error');
+            if (!name) return Swal.fire('Oops!', 'Please enter your name!', 'error');
 
             let accepted = false;
 
-            // Step 1: Mochi Cat Flowers
+            // 1. Mochi Cat Flowers GIF
             while (!accepted) {
                 const { value: response } = await Swal.fire({
                     title: `FOR ${name.toUpperCase()} ❤️`,
@@ -100,10 +100,10 @@
                 if (response) {
                     accepted = true;
                 } else {
-                    // Step 1.5: Crying Cat
+                    // 1.5. Sad Crying Cat GIF
                     await Swal.fire({
                         title: "Are you sure?",
-                        text: "Think about it again... 🥺",
+                        text: "Look at this face... try again? 🥺",
                         imageUrl: 'https://media.tenor.com/scS66fR2f98AAAAC/sad-cat-crying.gif',
                         imageWidth: 250,
                         confirmButtonText: "Okay, I'll reconsider",
@@ -112,7 +112,7 @@
                 }
             }
 
-            // Step 2: Walking Question
+            // 2. Walking Choice
             const { value: likesWalking } = await Swal.fire({
                 title: 'Quick question...',
                 text: 'Do you like long walks?',
@@ -133,28 +133,5 @@
                 dateOptions['Cafe Date'] = 'Cute Cafe Date ☕';
             }
 
-            const { value: dateType } = await Swal.fire({
-                title: 'Pick a vibe',
-                input: 'select',
-                inputOptions: dateOptions,
-                confirmButtonColor: '#ff4d6d'
-            });
-
-            if (dateType) {
-                fetch(FORMSPREE_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ name, likesWalking: likesWalking ? "Yes" : "No", chosenDate: dateType }),
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                });
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'It\'s a Date! ✅',
-                    text: `Perfect! I'll see you for our ${dateType}!`,
-                    confirmButtonColor: '#ff4d6d'
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+            // 3. Final Choice
+            const { value: dateType } =
