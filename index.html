@@ -3,109 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Invitation ❤️</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <title>Invitation ❤️</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        body { background-color: #ffc0cb; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; position: relative; }
-        .heart { position: absolute; color: #ff4d6d; font-size: 20px; top: -20px; user-select: none; z-index: -1; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
-        .container { background: rgba(255, 255, 255, 0.95); padding: 2.5rem; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 320px; z-index: 10; }
-        h1 { color: #d63384; margin-bottom: 1.5rem; }
-        input { width: 90%; padding: 12px; margin-bottom: 20px; border: 2px solid #ffccd5; border-radius: 12px; outline: none; text-align: center; }
-        button { background-color: #ff4d6d; color: white; border: none; padding: 14px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
-        button:hover { background-color: #ef233c; }
-        .swal2-image { border-radius: 15px; }
+        body { 
+            background-color: #ffc0cb; 
+            font-family: sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden; 
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            text-align: center; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 300px;
+            z-index: 10;
+        }
+        input { 
+            width: 80%; 
+            padding: 10px; 
+            margin: 20px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 10px; 
+        }
+        button { 
+            background: #ff4d6d; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            width: 100%;
+        }
+        /* Falling Hearts */
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            top: -20px;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh); }
+        }
     </style>
 </head>
 <body>
-    <div id="heart-container"></div>
+
+    <div id="hearts"></div>
+
     <div class="container">
-        <h1>Who are you?</h1>
-        <input type="text" id="userName" placeholder="Enter your name..." autocomplete="off">
-        <button id="startBtn">Enter</button>
+        <h2 style="color: #d63384;">Who are you?</h2>
+        <input type="text" id="name" placeholder="Name here...">
+        <button onclick="start()">Enter</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Heart Rain
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            document.getElementById('heart-container').appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 5000);
-        }
-        setInterval(createHeart, 300);
+        // Heart Animation
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.innerHTML = '❤️';
+            h.className = 'heart';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.getElementById('hearts').appendChild(h);
+            setTimeout(() => h.remove(), 5000);
+        }, 300);
 
-        const FORMSPREE_URL = "https://formspree.io/f/xqewqrgv"; 
+        async function start() {
+            const name = document.getElementById('name').value.trim();
+            if (!name) return alert("Enter your name!");
 
-        document.getElementById('startBtn').addEventListener('click', async () => {
-            const name = document.getElementById('userName').value.trim();
-            if (!name) return Swal.fire('Oops!', 'Please enter a name!', 'error');
-
-            let accepted = false;
-
-            // Step 1: Mochi Cat Invitation
-            while (!accepted) {
-                const { value: response } = await Swal.fire({
-                    title: `FOR ${name.toUpperCase()} ❤️`,
-                    text: "Would you like to be my date?",
-                    imageUrl: 'https://res.cloudinary.com/demo/image/fetch/https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG56Z3R3bmZidm9yeHByZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/v7O96tT4XUiz5T906s/giphy.gif', 
-                    imageWidth: 250,
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes! 😍',
-                    cancelButtonText: 'No ☹️',
-                    confirmButtonColor: '#ff4d6d',
-                    cancelButtonColor: '#ffccd5',
-                    allowOutsideClick: false
-                });
-
-                if (response) {
-                    accepted = true;
-                } else {
-                    // Step 1.5: Sad Cat Guilt Trip
-                    await Swal.fire({
-                        title: "Are you sure?",
-                        text: "Think about it again... 🥺",
-                        imageUrl: 'https://res.cloudinary.com/demo/image/fetch/https://media.giphy.com/media/OPU6wUKARA8AU/giphy.gif',
-                        imageWidth: 250,
-                        confirmButtonText: "Okay, I'll reconsider",
-                        confirmButtonColor: '#ff4d6d'
-                    });
-                }
-            }
-
-            const { value: likesWalking } = await Swal.fire({
-                title: 'Quick question...',
-                text: 'Do you like long walks?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes!',
-                cancelButtonText: 'Not really',
-                confirmButtonColor: '#ff4d6d'
-            });
-
-            let dateOptions = { 'Outdoor Adventure': 'Adventure 🌲', 'Chill Hangout': 'Chill Hangout 🍿', 'Surprise Me': 'Surprise Me! 🎁' };
-            if (likesWalking) { dateOptions['Cafe Date'] = 'Cute Cafe Date ☕'; }
-
-            const { value: dateType } = await Swal.fire({
-                title: 'Pick a vibe',
-                input: 'select',
-                inputOptions: dateOptions,
-                confirmButtonColor: '#ff4d6d'
-            });
-
-            if (dateType) {
-                fetch(FORMSPREE_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ name, likesWalking: likesWalking ? "Yes" : "No", chosenDate: dateType }),
-                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                });
-                Swal.fire({ icon: 'success', title: 'It\'s a Date! ✅', text: `I'll see you for our ${dateType}!`, confirmButtonColor: '#ff4d6d' });
-            }
-        });
+            let yes = false;
+            while (!yes) {
+                const { isConfirmed } = await Swal.fire({
+                    title: `Hi ${name}!
     </script>
 </body>
 </html>
