@@ -6,42 +6,10 @@
     <title>A Special Invitation ❤️</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
-        body { 
-            background-color: #ffc0cb; 
-            font-family: 'Segoe UI', sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden; 
-            position: relative;
-        }
-
-        .heart {
-            position: absolute;
-            color: #ff4d6d;
-            font-size: 20px;
-            top: -20px;
-            user-select: none;
-            z-index: -1;
-            animation: fall linear forwards;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(105vh) rotate(360deg); }
-        }
-
-        .container { 
-            background: rgba(255, 255, 255, 0.95); 
-            padding: 2.5rem; 
-            border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
-            text-align: center; 
-            width: 320px; 
-            z-index: 10;
-        }
-
+        body { background-color: #ffc0cb; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; position: relative; }
+        .heart { position: absolute; color: #ff4d6d; font-size: 20px; top: -20px; user-select: none; z-index: -1; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+        .container { background: rgba(255, 255, 255, 0.95); padding: 2.5rem; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 320px; z-index: 10; }
         h1 { color: #d63384; margin-bottom: 1.5rem; }
         input { width: 90%; padding: 12px; margin-bottom: 20px; border: 2px solid #ffccd5; border-radius: 12px; outline: none; text-align: center; }
         button { background-color: #ff4d6d; color: white; border: none; padding: 14px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
@@ -50,9 +18,7 @@
     </style>
 </head>
 <body>
-
     <div id="heart-container"></div>
-
     <div class="container">
         <h1>Who are you?</h1>
         <input type="text" id="userName" placeholder="Enter your name..." autocomplete="off">
@@ -60,9 +26,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
-        // Heart Animation
+        // Heart Rain
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -78,16 +43,16 @@
 
         document.getElementById('startBtn').addEventListener('click', async () => {
             const name = document.getElementById('userName').value.trim();
-            if (!name) return Swal.fire('Oops!', 'Please enter your name!', 'error');
+            if (!name) return Swal.fire('Oops!', 'Please enter a name!', 'error');
 
             let accepted = false;
 
-            // 1. Mochi Cat Flowers GIF
+            // Step 1: Mochi Cat Invitation
             while (!accepted) {
                 const { value: response } = await Swal.fire({
                     title: `FOR ${name.toUpperCase()} ❤️`,
                     text: "Would you like to be my date?",
-                    imageUrl: 'https://media.tenor.com/9v1S-N2mX7wAAAAC/mochi-cat-flowers.gif', 
+                    imageUrl: 'https://res.cloudinary.com/demo/image/fetch/https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG56Z3R3bmZidm9yeHByZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/v7O96tT4XUiz5T906s/giphy.gif', 
                     imageWidth: 250,
                     showCancelButton: true,
                     confirmButtonText: 'Yes! 😍',
@@ -100,11 +65,11 @@
                 if (response) {
                     accepted = true;
                 } else {
-                    // 1.5. Sad Crying Cat GIF
+                    // Step 1.5: Sad Cat Guilt Trip
                     await Swal.fire({
                         title: "Are you sure?",
-                        text: "Look at this face... try again? 🥺",
-                        imageUrl: 'https://media.tenor.com/scS66fR2f98AAAAC/sad-cat-crying.gif',
+                        text: "Think about it again... 🥺",
+                        imageUrl: 'https://res.cloudinary.com/demo/image/fetch/https://media.giphy.com/media/OPU6wUKARA8AU/giphy.gif',
                         imageWidth: 250,
                         confirmButtonText: "Okay, I'll reconsider",
                         confirmButtonColor: '#ff4d6d'
@@ -112,7 +77,6 @@
                 }
             }
 
-            // 2. Walking Choice
             const { value: likesWalking } = await Swal.fire({
                 title: 'Quick question...',
                 text: 'Do you like long walks?',
@@ -123,15 +87,25 @@
                 confirmButtonColor: '#ff4d6d'
             });
 
-            let dateOptions = {
-                'Outdoor Adventure': 'Adventure 🌲',
-                'Chill Hangout': 'Chill Hangout 🍿',
-                'Surprise Me': 'Surprise Me! 🎁'
-            };
+            let dateOptions = { 'Outdoor Adventure': 'Adventure 🌲', 'Chill Hangout': 'Chill Hangout 🍿', 'Surprise Me': 'Surprise Me! 🎁' };
+            if (likesWalking) { dateOptions['Cafe Date'] = 'Cute Cafe Date ☕'; }
 
-            if (likesWalking) {
-                dateOptions['Cafe Date'] = 'Cute Cafe Date ☕';
+            const { value: dateType } = await Swal.fire({
+                title: 'Pick a vibe',
+                input: 'select',
+                inputOptions: dateOptions,
+                confirmButtonColor: '#ff4d6d'
+            });
+
+            if (dateType) {
+                fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ name, likesWalking: likesWalking ? "Yes" : "No", chosenDate: dateType }),
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+                });
+                Swal.fire({ icon: 'success', title: 'It\'s a Date! ✅', text: `I'll see you for our ${dateType}!`, confirmButtonColor: '#ff4d6d' });
             }
-
-            // 3. Final Choice
-            const { value: dateType } =
+        });
+    </script>
+</body>
+</html>
