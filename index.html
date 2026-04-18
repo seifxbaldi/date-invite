@@ -18,7 +18,6 @@
             position: relative;
         }
 
-        /* Heart Rain */
         .heart {
             position: absolute;
             color: #ff4d6d;
@@ -43,11 +42,11 @@
             z-index: 10;
         }
 
-        h1 { color: #d63384; margin-bottom: 1.5rem; font-size: 2rem; }
+        h1 { color: #d63384; margin-bottom: 1.5rem; }
         input { width: 90%; padding: 12px; margin-bottom: 20px; border: 2px solid #ffccd5; border-radius: 12px; outline: none; text-align: center; }
-        button { background-color: #ff4d6d; color: white; border: none; padding: 14px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; font-size: 1rem; }
-        button:hover { background-color: #ef233c; transform: translateY(-2px); }
-        .swal2-image { border-radius: 15px; }
+        button { background-color: #ff4d6d; color: white; border: none; padding: 14px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        button:hover { background-color: #ef233c; }
+        .swal2-image { border-radius: 15px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -63,34 +62,32 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // 1. Falling Hearts Logic
+        // Heart Rain
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
             heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            heart.style.opacity = Math.random();
             document.getElementById('heart-container').appendChild(heart);
             setTimeout(() => { heart.remove(); }, 5000);
         }
         setInterval(createHeart, 300);
 
-        // 2. The Main Interaction
         const FORMSPREE_URL = "https://formspree.io/f/xqewqrgv"; 
 
         document.getElementById('startBtn').addEventListener('click', async () => {
             const name = document.getElementById('userName').value.trim();
-            if (!name) return Swal.fire('Oops!', 'Please enter a name first!', 'error');
+            if (!name) return Swal.fire('Oops!', 'Please enter a name!', 'error');
 
             let accepted = false;
 
-            // Loop until they say YES
+            // Step 1: Mochi Cat Flowers
             while (!accepted) {
                 const { value: response } = await Swal.fire({
                     title: `FOR ${name.toUpperCase()} ❤️`,
                     text: "Would you like to be my date?",
-                    imageUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG56Z3R3bmZidm9yeHByZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/v7O96tT4XUiz5T906s/giphy.gif', 
+                    imageUrl: 'https://media.tenor.com/9v1S-N2mX7wAAAAC/mochi-cat-flowers.gif', 
                     imageWidth: 250,
                     showCancelButton: true,
                     confirmButtonText: 'Yes! 😍',
@@ -103,11 +100,11 @@
                 if (response) {
                     accepted = true;
                 } else {
-                    // Crying cat GIF for the "No" guilt-trip
+                    // Step 1.5: Crying Cat
                     await Swal.fire({
                         title: "Are you sure?",
-                        text: "Look at this face... think about it again? 🥺",
-                        imageUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnB2Nmt3cW14dzZ4ZzB4Z3B4Z3B4Z3B4Z3B4Z3B4Z3B4Z3B4Z3B4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/OPU6wUKARA8AU/giphy.gif',
+                        text: "Think about it again... 🥺",
+                        imageUrl: 'https://media.tenor.com/scS66fR2f98AAAAC/sad-cat-crying.gif',
                         imageWidth: 250,
                         confirmButtonText: "Okay, I'll reconsider",
                         confirmButtonColor: '#ff4d6d'
@@ -115,18 +112,17 @@
                 }
             }
 
-            // Walking Preference
+            // Step 2: Walking Question
             const { value: likesWalking } = await Swal.fire({
                 title: 'Quick question...',
                 text: 'Do you like long walks?',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, I love them!',
+                confirmButtonText: 'Yes!',
                 cancelButtonText: 'Not really',
                 confirmButtonColor: '#ff4d6d'
             });
 
-            // Date options (Dinner removed as requested)
             let dateOptions = {
                 'Outdoor Adventure': 'Adventure 🌲',
                 'Chill Hangout': 'Chill Hangout 🍿',
@@ -145,7 +141,6 @@
             });
 
             if (dateType) {
-                // Send to Formspree
                 fetch(FORMSPREE_URL, {
                     method: 'POST',
                     body: JSON.stringify({ name, likesWalking: likesWalking ? "Yes" : "No", chosenDate: dateType }),
