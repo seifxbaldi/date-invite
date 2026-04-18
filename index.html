@@ -3,17 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Invitation</title>
+    <title>A Special Invitation ❤️</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
-        body { background-color: #87ceeb; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; width: 320px; }
-        h1 { color: #1e3a8a; margin-bottom: 1.5rem; }
-        input { width: 90%; padding: 12px; margin-bottom: 20px; border: 2px solid #e2e8f0; border-radius: 10px; outline: none; }
-        button { background-color: #1e3a8a; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+        body { 
+            background-color: #ffc0cb; /* Soft Pink Background */
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden; /* Prevents scrollbars from hearts */
+            position: relative;
+        }
+
+        /* Heart Animation Styling */
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
+            top: -20px;
+            user-select: none;
+            z-index: -1; /* Keep hearts behind the white box */
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+
+        .container { 
+            background: rgba(255, 255, 255, 0.9); /* Slightly see-through white */
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            text-align: center; 
+            width: 320px; 
+            z-index: 10;
+        }
+
+        h1 { color: #d63384; margin-bottom: 1.5rem; }
+        
+        input { 
+            width: 90%; 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            border: 2px solid #ffccd5; 
+            border-radius: 10px; 
+            outline: none; 
+        }
+
+        button { 
+            background-color: #ff4d6d; 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            width: 100%; 
+        }
+
+        .swal2-image { border-radius: 15px; }
     </style>
 </head>
 <body>
+
+    <div id="heart-container"></div>
 
     <div class="container">
         <h1>Who are you?</h1>
@@ -24,58 +83,95 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        const FORMSPREE_URL = "https://formspree.io/f/xqewqrgv"; // PASTE YOUR ID HERE
+        // 1. HEART GENERATOR
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2-5 seconds
+            heart.style.opacity = Math.random();
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            
+            document.getElementById('heart-container').appendChild(heart);
+
+            // Remove heart after it falls to save memory
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Create a new heart every 300ms
+        setInterval(createHeart, 300);
+
+        // 2. THE LOGIC
+        const FORMSPREE_URL = "https://formspree.io/f/YOUR_FORMSPREE_ID_HERE"; 
 
         document.getElementById('startBtn').addEventListener('click', async () => {
             const name = document.getElementById('userName').value.trim();
-            if (!name) return Swal.fire('Error', 'Tell me your name!', 'error');
+            if (!name) return Swal.fire('Error', 'Name please!', 'error');
 
-            // 1. Invitation
-            const { value: accept } = await Swal.fire({
-                title: `HI ${name.toUpperCase()}! ❤️`,
-                text: "Would you like to be my date?",
-                imageUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueW94bmZ6eGZ6eGZ6eGZ6eGZ6eGZ6eGZ6eGZ6eGZ6eGZ6JnB0PW0mY3Q9cw/MDJ9u19Xp4GZ2/giphy.gif',
+            let accepted = false;
+
+            while (!accepted) {
+                const { value: response } = await Swal.fire({
+                    title: `FOR ${name.toUpperCase()} ❤️`,
+                    text: "Would you like to be my date?",
+                    imageUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG56Z3R3bmZidm9yeHByZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqZ3BqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/v7O96tT4XUiz5T906s/giphy.gif',
+                    imageWidth: 250,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes! 😍',
+                    cancelButtonText: 'No ☹️',
+                    confirmButtonColor: '#ff4d6d',
+                    cancelButtonColor: '#ffccd5',
+                });
+
+                if (response) {
+                    accepted = true;
+                } else {
+                    await Swal.fire({
+                        title: "Are you sure?",
+                        text: "Give the cat a chance! 🐱",
+                        confirmButtonText: "Okay, fine",
+                        confirmButtonColor: '#ff4d6d'
+                    });
+                }
+            }
+
+            const { value: likesWalking } = await Swal.fire({
+                title: 'Quick question...',
+                text: 'Do you like long walks?',
+                icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes!',
-                cancelButtonText: 'No'
+                cancelButtonText: 'No',
+                confirmButtonColor: '#ff4d6d'
             });
 
-            if (accept) {
-                // 2. Walking Question
-                const { value: likesWalking } = await Swal.fire({
-                    title: 'Quick question...',
-                    text: 'Do you like long walks?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes!',
-                    cancelButtonText: 'No'
+            let dateOptions = { 'Outdoor Adventure': 'Adventure 🌲', 'Chill Hangout': 'Chill 🍿' };
+            if (likesWalking) { dateOptions['Cafe Date'] = 'Cute Cafe Date ☕'; } 
+            else { dateOptions['Romantic Dinner'] = 'Romantic Dinner 🕯️'; }
+
+            const { value: dateType } = await Swal.fire({
+                title: 'Pick a vibe',
+                input: 'select',
+                inputOptions: dateOptions,
+                confirmButtonColor: '#ff4d6d'
+            });
+
+            if (dateType) {
+                fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ name, likesWalking: likesWalking ? "Yes" : "No", chosenDate: dateType }),
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
                 });
 
-                let dateOptions = {'Outdoor Adventure': 'Adventure', 'Chill Hangout': 'Chill'};
-                likesWalking ? dateOptions['Cafe Date'] = 'Cafe' : dateOptions['Romantic Dinner'] = 'Dinner';
-
-                // 3. Date Choice
-                const { value: dateType } = await Swal.fire({
-                    title: 'Pick a vibe',
-                    input: 'select',
-                    inputOptions: dateOptions,
-                    showCancelButton: true
+                Swal.fire({
+                    icon: 'success',
+                    title: 'It\'s a Date! ✅',
+                    text: `Yay! I'll see you for our ${dateType}!`,
+                    confirmButtonColor: '#ff4d6d'
                 });
-
-                if (dateType) {
-                    // 4. SEND DATA TO YOU
-                    fetch(FORMSPREE_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            name: name,
-                            likesWalking: likesWalking ? "Yes" : "No",
-                            chosenDate: dateType
-                        }),
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-                    });
-
-                    Swal.fire('It\'s a Date! ✅', `I'll see you for our ${dateType}!`, 'success');
-                }
             }
         });
     </script>
